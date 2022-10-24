@@ -1,0 +1,53 @@
+version: '2.2.1'
+
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ../
+      dockerfile: ./.dev/dev-frontend.dockerfile
+    restart: always
+    volumes:
+      - ../frontend:/app
+    networks:
+      - net
+    ports:
+      - 3000:3000
+    entrypoint: sh /tmp/dev-frontend-entry.sh
+
+  backend:
+    depends_on:
+      - database
+    container_name: backend
+    build:
+      context: ../
+      dockerfile: ./.dev/dev-backend.dockerfile
+    restart: always
+    volumes:
+      - ../backend:/app
+    networks:
+      - net
+    ports:
+      - 8080:8080
+    env_file:
+      - ../.env/backend.env
+    entrypoint: sh /tmp/dev-backend-entry.sh
+
+  database:
+    container_name: database
+    build:
+      context: ../
+      dockerfile: ./.dev/dev-database.dockerfile
+    restart: always
+    volumes:
+      - ../database:/var/lib/mysql
+    networks:
+      - net
+    ports:
+      - 3306:3306
+    env_file:
+      - ../.env/database.env
+
+networks:
+  net:
+    driver: bridge
