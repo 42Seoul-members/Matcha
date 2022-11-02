@@ -13,6 +13,8 @@ services:
       - net
     ports:
       - 3000:3000
+    env_file:
+      - ../.env/frontend.env
     entrypoint: sh /tmp/dev-frontend-entry.sh
 
   backend:
