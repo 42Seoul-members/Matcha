@@ -1,6 +1,7 @@
 import * as ReactQuery from '@tanstack/react-query';
 import * as ReactQueryDev from '@tanstack/react-query-devtools';
 import { Router } from './Router';
+
 const queryClient = new ReactQuery.QueryClient();
 
 function App() {

@@ -22,4 +22,6 @@ export const testRouter = express.Router();
  *        content:
  *          application/json:
  */
-testRouter.get('/', () => {});
+testRouter.get('/', (req, res) => {
+  req.header
+});
