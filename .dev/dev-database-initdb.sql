@@ -1,178 +1,178 @@
-CREATE TABLE USER_INFO (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  LAST_NAME VARCHAR(10) NOT NULL,
-  FIRST_NAME VARCHAR(10) NOT NULL,
-  PASSWD VARCHAR(512) NOT NULL,
-  GENDER ENUM('m', 'f', 'o'),
-  SEXUAL_PREFERENCE ENUM('bi', 'hetero', 'homo'),
-  BIOGRAPHY VARCHAR(64) NOT NULL DEFAULT '',
-  LAST_LOGIN TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  BLOCKED_DATE TIMESTAMP,
-  PROFILE_IMG INT UNSIGNED,
-  AGE TINYINT UNSIGNED
+create table user_info (
+  id int unsigned not null auto_increment primary key,
+  last_name varchar(10) not null,
+  first_name varchar(10) not null,
+  passwd varchar(512) not null,
+  gender enum('m', 'f', 'o'),
+  sexual_preference enum('bi', 'hetero', 'homo'),
+  biography varchar(64) not null default '',
+  last_login timestamp not null default current_timestamp,
+  blocked_date timestamp,
+  profile_img int unsigned,
+  age tinyint unsigned
 );
 
-CREATE TABLE EMAIL_LIST (
-  USER_ID INT UNSIGNED NOT NULL PRIMARY KEY,
-  FOREIGN KEY (USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+create table email_list (
+  user_id int unsigned not null primary key,
+  foreign key (user_id)
+    references user_info(id)
+    on delete cascade,
 
-  EMAIL VARCHAR(128) NOT NULL UNIQUE
+  email varchar(128) not null unique
 );
 
-CREATE TABLE LOGIN_NAME_LIST (
-  USER_ID INT UNSIGNED NOT NULL PRIMARY KEY,
-  FOREIGN KEY (USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+create table login_name_list (
+  user_id int unsigned not null primary key,
+  foreign key (user_id)
+    references user_info(id)
+    on delete cascade,
   
-  LOGIN_NAME VARCHAR(30) NOT NULL
+  login_name varchar(30) not null
 );
 
-CREATE TABLE TAG_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  TAG_NAME VARCHAR(10) NOT NULL
+create table tag_list (
+  id int unsigned not null auto_increment primary key,
+  tag_name varchar(10) not null
 );
 
-CREATE TABLE USER_TAG_MAPPER (
-  USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+create table user_tag_mapper (
+  user_id int unsigned not null,
+  foreign key (user_id)
+    references user_info(id)
+    on delete cascade,
 
-  TAG_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (TAG_ID)
-    REFERENCES TAG_LIST(ID)
-    ON DELETE CASCADE,
+  tag_id int unsigned not null,
+  foreign key (tag_id)
+    references tag_list(id)
+    on delete cascade,
 
-  PRIMARY KEY (USER_ID, TAG_ID)
+  primary key (user_id, tag_id)
 );
 
-CREATE TABLE NOTIFY_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+create table notify_list (
+  id int unsigned not null auto_increment primary key,
 
-  FROM_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (FROM_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  from_user_id int unsigned not null,
+  foreign key (from_user_id)
+    references user_info(id)
+    on delete cascade,
   
-  TO_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (TO_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  to_user_id int unsigned not null,
+  foreign key (to_user_id)
+    references user_info(id)
+    on delete cascade,
 
-  EVENT_NAME ENUM('like', 'unlike', 'visit', 'chat') NOT NULL
+  event_name enum('like', 'unlike', 'visit', 'chat') not null
 );
 
-CREATE TABLE REPORT_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+create table report_list (
+  id int unsigned not null auto_increment primary key,
 
-  FROM_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (FROM_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  from_user_id int unsigned not null,
+  foreign key (from_user_id)
+    references user_info(id)
+    on delete cascade,
   
-  TO_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (TO_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  to_user_id int unsigned not null,
+  foreign key (to_user_id)
+    references user_info(id)
+    on delete cascade,
   
-  REPORT_DATE TIMESTAMP NOT NULL DEFAULT(CURRENT_TIMESTAMP)
+  report_date timestamp not null default(current_timestamp)
 );
 
-CREATE TABLE IMG_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+create table img_list (
+  id int unsigned not null auto_increment primary key,
 
-  USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  user_id int unsigned not null,
+  foreign key (user_id)
+    references user_info(id)
+    on delete cascade,
   
-  IMG_URL VARCHAR(128) NOT NULL
+  img_url varchar(128) not null
 );
 
-CREATE TABLE ROOM_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+create table room_list (
+  id int unsigned not null auto_increment primary key,
 
-  USER1_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (USER1_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  user1_id int unsigned not null,
+  foreign key (user1_id)
+    references user_info(id)
+    on delete cascade,
 
-  USER2_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (USER2_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE
+  user2_id int unsigned not null,
+  foreign key (user2_id)
+    references user_info(id)
+    on delete cascade
 );
 
-CREATE TABLE MSG_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+create table msg_list (
+  id int unsigned not null auto_increment primary key,
 
-  ROOM_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (ROOM_ID)
-    REFERENCES ROOM_LIST(ID)
-    ON DELETE CASCADE,
+  room_id int unsigned not null,
+  foreign key (room_id)
+    references room_list(id)
+    on delete cascade,
 
-  MSG VARCHAR(128) NOT NULL,
-  FROM_ID INT UNSIGNED NOT NULL,
-  SEND_TIME TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  msg varchar(128) not null,
+  from_id int unsigned not null,
+  send_time timestamp not null default current_timestamp
 );
 
-CREATE TABLE LIKE_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+create table like_list (
+  id int unsigned not null auto_increment primary key,
 
-  FROM_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (FROM_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  from_user_id int unsigned not null,
+  foreign key (from_user_id)
+    references user_info(id)
+    on delete cascade,
 
-  TO_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (TO_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE
+  to_user_id int unsigned not null,
+  foreign key (to_user_id)
+    references user_info(id)
+    on delete cascade
 );
 
-CREATE TABLE BLOCK_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+create table block_list (
+  id int unsigned not null auto_increment primary key,
 
-  FROM_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (FROM_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
+  from_user_id int unsigned not null,
+  foreign key (from_user_id)
+    references user_info(id)
+    on delete cascade,
 
-  TO_USER_ID INT UNSIGNED NOT NULL,
-  FOREIGN KEY (TO_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE
+  to_user_id int unsigned not null,
+  foreign key (to_user_id)
+    references user_info(id)
+    on delete cascade
 );
 
-CREATE TABLE VISIT_LIST (
-  ID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  FROM_USER_ID INT UNSIGNED NOT NULL,
-  TO_USER_ID INT UNSIGNED NOT NULL,
+create table visit_list (
+  id int unsigned not null auto_increment primary key,
+  from_user_id int unsigned not null,
+  to_user_id int unsigned not null,
 
-  FOREIGN KEY (FROM_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE,
-  FOREIGN KEY (TO_USER_ID)
-    REFERENCES USER_INFO(ID)
-    ON DELETE CASCADE
+  foreign key (from_user_id)
+    references user_info(id)
+    on delete cascade,
+  foreign key (to_user_id)
+    references user_info(id)
+    on delete cascade
 );
 
-INSERT INTO MATCHA.USER_INFO (last_name, first_name, passwd) VALUES
+insert into matcha.user_info (last_name, first_name, passwd) values
   ('ham', 'jaewon', '1234'),
   ('kim', 'yeju', '1234');
 
-INSERT INTO MATCHA.EMAIL_LIST (USER_ID, EMAIL) VALUES
+insert into matcha.email_list (user_id, email) values
   (1, 'jaham@student.42seoul.kr'),
   (2, 'yeju@student.42seoul.kr');
 
-INSERT INTO MATCHA.LOGIN_NAME_LIST (USER_ID, LOGIN_NAME) VALUES
+insert into matcha.login_name_list (user_id, login_name) values
   (1, 'jaham'),
   (2, 'yeju');
 
-INSERT INTO MATCHA.IMG_LIST (USER_ID, IMG_URL) VALUES
+insert into matcha.img_list (user_id, img_url) values
   (1, 'small_jaham'),
   (1, 'middle_jaham'),
   (1, 'large_jaham'),
@@ -180,13 +180,13 @@ INSERT INTO MATCHA.IMG_LIST (USER_ID, IMG_URL) VALUES
   (2, 'middle_yeju'),
   (2, 'large_yeju');
 
-INSERT INTO MATCHA.LIKE_LIST (FROM_USER_ID, TO_USER_ID) VALUES
+insert into matcha.like_list (from_user_id, to_user_id) values
   (1, 2);
 
-INSERT INTO MATCHA.BLOCK_LIST (FROM_USER_ID, TO_USER_ID) VALUES
+insert into matcha.block_list (from_user_id, to_user_id) values
   (2, 1);
 
-INSERT INTO MATCHA.TAG_LIST (TAG_NAME) VALUES
+insert into matcha.tag_list (tag_name) values
   ('game'),
   ('music'),
   ('rock'),
@@ -194,25 +194,25 @@ INSERT INTO MATCHA.TAG_LIST (TAG_NAME) VALUES
   ('classic'),
   ('pop');
 
-INSERT INTO MATCHA.user_tag_mapper (USER_ID, TAG_ID) VALUES
+insert into matcha.user_tag_mapper (user_id, tag_id) values
   (1, 3),
   (1, 5),
   (2, 1),
   (2, 2),
   (2, 3);
 
-INSERT INTO MATCHA.ROOM_LIST (USER1_ID, USER2_ID) VALUES
+insert into matcha.room_list (user1_id, user2_id) values
   (1, 2);
 
-INSERT INTO MATCHA.MSG_LIST (ROOM_ID, MSG, FROM_ID) VALUES
-  (1, 'first MSG', '1'),
-  (1, 'second MSG', '2'),
-  (1, 'third MSG', '1'),
-  (1, 'fourth MSG', '1'),
-  (1, 'fifth MSG', '2'),
-  (1, 'sixth MSG', '2'),
-  (1, 'seventh MSG', '1');
+insert into matcha.msg_list (room_id, msg, from_id) values
+  (1, 'first msg', '1'),
+  (1, 'second msg', '2'),
+  (1, 'third msg', '1'),
+  (1, 'fourth msg', '1'),
+  (1, 'fifth msg', '2'),
+  (1, 'sixth msg', '2'),
+  (1, 'seventh msg', '1');
 
--- SELECT u.USER_ID, ui.LOGIN_NAME, t.ID AS tagid, t.TAG_NAME FROM user_tag_mapper AS u
---   LEFT JOIN USER_INFO AS ui ON u.USER_ID = ui.ID
---   LEFT JOIN TAG_LIST AS t ON u.TAG_ID = t.ID;
+-- select u.user_id, ui.login_name, t.id as tagid, t.tag_name from user_tag_mapper as u
+--   left join user_info as ui on u.user_id = ui.id
+--   left join tag_list as t on u.tag_id = t.id;
