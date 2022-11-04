@@ -13,9 +13,27 @@ export const setLoginStateAtom = atom(null, (_, set, update: string | null) => {
 });
 
 export function AuthCheck() {
-  React.useEffect(() => {
-    axiosInstance.get('/test');
-  }, []);
+  const getToken = async () => {
+    const response = await axiosInstance.get('/logintest');
+    localStorage.setItem('refreshToken', response.data.refreshToken);
+  };
 
-  return <div>testing</div>;
+  const testRefresh = async () => {
+    axiosInstance
+      .post('/logintest')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log('test done');
+  };
+
+  return (
+    <>
+      <button onClick={getToken}>getToken</button>
+      <button onClick={testRefresh}>test refresh</button>
+    </>
+  );
 }

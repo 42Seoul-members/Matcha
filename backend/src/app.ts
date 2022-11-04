@@ -41,7 +41,8 @@ app.use(
 
 app.use(
   cors({
-    origin: [`${process.env.FRONTEND_EP}`],
+    // origin: [`${process.env.FRONTEND_EP}`],
+    origin: ['https://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authoriazation', 'x-csrf-token'],
     credentials: true,
@@ -61,14 +62,40 @@ app.get('/', (req: express.Request, res: express.Response) => {
 });
 
 app.get('/logintest', (_, res: express.Response) => {
-  res.cookie('access_token', {
-    expires: new Date(Date.now() + 60),
+  res.cookie('access_token', 'acessToken', {
+    expires: new Date(Date.now() + 6000000),
     secure: true,
     httpOnly: true,
     sameSite: 'none',
   });
 
   res.json({ refreshToken: 'refreshToken' });
+});
+
+let a = 0;
+
+app.post('/logintest', (req: express.Request, res: express.Response) => {
+  console.log(`logintest access token cookie: ${req.cookies}`);
+  console.log(req.headers);
+
+  if (a == 0) {
+    res.clearCookie('access_token');
+    a++;
+    res.status(401).send('Unauthorized');
+  } else {
+    a = 0;
+    res.send('done');
+  }
+});
+
+app.post('/refreshtest', (req: express.Request, res: express.Response) => {
+  const body = req.body;
+  console.log(body);
+  Object.entries(body).forEach((curr) => console.log(curr[0], curr[1]));
+  // console.log(`refresh test token: ${body?.refreshToken}`);
+  res.send({
+    refreshToken: 'refreshToken',
+  });
 });
 
 app.listen(8080, () => {
