@@ -5,6 +5,7 @@ import { userRouter } from './routes/user.router';
 import { testRouter } from './routes/test.router';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import { authRouter } from './routes/auth.router';
 
 class App {
   app: express.Application;
@@ -54,6 +55,7 @@ app.use(
 
 app.use(bodyParser.json());
 
+app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/test', testRouter);
 

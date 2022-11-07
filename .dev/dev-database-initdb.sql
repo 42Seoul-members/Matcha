@@ -21,13 +21,22 @@ create table email_list (
   email varchar(128) not null unique
 );
 
-create table login_name_list (
+create table refresh_token_list (
   user_id int unsigned not null primary key,
   foreign key (user_id)
     references user_info(id)
     on delete cascade,
   
-  login_name varchar(30) not null
+  refresh_token varchar(256) not null
+);
+
+create table loginname_list (
+  user_id int unsigned not null primary key,
+  foreign key (user_id)
+    references user_info(id)
+    on delete cascade,
+  
+  loginname varchar(30) not null
 );
 
 create table tag_list (
@@ -168,7 +177,7 @@ insert into matcha.email_list (user_id, email) values
   (1, 'jaham@student.42seoul.kr'),
   (2, 'yeju@student.42seoul.kr');
 
-insert into matcha.login_name_list (user_id, login_name) values
+insert into matcha.loginname_list (user_id, loginname) values
   (1, 'jaham'),
   (2, 'yeju');
 

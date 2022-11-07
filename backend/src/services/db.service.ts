@@ -8,14 +8,14 @@ const caseConverter = (str: string) =>
 const updateQueryBuilder = (
   tableName: string,
   keyName: string,
-  { id, ...rest }: Partial<UserModel.UserInfo>,
+  { id, ...rest }: Partial<UserModel.UserInfo>
 ) =>
   `UPDATE ${tableName} SET ${Object.entries(rest).reduce(
     (acc, curr) =>
-      `${
-        curr[1] === undefined ? acc : acc + (acc.length === 0 ? '' : ', ')
-      }${caseConverter(curr[0])}= :${curr[0]}`,
-    '',
+      `${curr[1] === undefined ? acc : acc + (acc.length === 0 ? '' : ', ')}${
+        curr[0]
+      }= :${curr[0]}`,
+    ''
   )} WHERE ${keyName}= :id`;
 
 const FIND_USER_BY_ID_SQL = 'SELECT * from user_info WHERE id= :id ';
@@ -54,7 +54,7 @@ export const findUserById = async (id: number) => {
 
 export const updateUserInfo = async (
   id: number,
-  newUserInfo: Partial<UserModel.UserInfo>,
+  newUserInfo: Partial<UserModel.UserInfo>
 ) => {
   const connection = await getConnection();
 
@@ -64,7 +64,7 @@ export const updateUserInfo = async (
       {
         id,
         ...newUserInfo,
-      },
+      }
     );
   } catch (err) {
     console.log(err);
@@ -97,3 +97,47 @@ export const updateUserEmail = async (id: number, email: string) => {
 //     throw err;
 //   }
 // };
+
+//=======================================================
+
+const SELECT_USER_BY_LOGINNAME_SQL = `select user_id, passwd from loginname_list join user_info on loginname_list.user_id=user_info.id where loginname_list.loginname= :loginname`;
+const SELECT_TOKEN_BY_UID_SQL = `select refresh_token from refresh_token_list where user_id= :user_id`;
+
+interface temp {
+  user_id: number;
+  passwd: string;
+}
+
+export async function getUserByLoginname(loginname: string) {
+  const connection = await getConnection();
+  try {
+    const userAuthInfo = (await connection.execute(
+      SELECT_USER_BY_LOGINNAME_SQL,
+      {
+        loginname,
+      }
+    )) as unknown as UserModel.UserLoginnameAuthInfo[];
+
+    connection.release();
+    return userAuthInfo;
+  } catch (err) {
+    connection.release();
+    throw new Error();
+  }
+}
+
+export async function getRefreshToken(userId: number) {
+  const connection = await getConnection();
+
+  try {
+    const refreshToken = (await connection.execute(SELECT_TOKEN_BY_UID_SQL, {
+      user_id: userId,
+    })) as unknown as string[];
+
+    connection.release();
+    return refreshToken;
+  } catch (err) {
+    connection.release();
+    throw new Error();
+  }
+}

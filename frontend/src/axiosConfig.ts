@@ -6,7 +6,6 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((request) => {
-  console.log(request.method);
   if (request.method === 'post') {
     request.headers = {
       ...request.headers,
@@ -19,12 +18,8 @@ axiosInstance.interceptors.request.use((request) => {
 });
 
 axiosInstance.interceptors.response.use(
-  (response) => {
-    console.warn('success');
-    return response;
-  },
+  (response) => response,
   async (error) => {
-    console.warn('error');
     if (error?.response.status === 401) {
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken === null) return Promise.reject(error);

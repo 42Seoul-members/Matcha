@@ -1,3 +1,5 @@
+import { RowDataPacket } from 'mysql2';
+
 export type GenderType = 'm' | 'f' | 'o';
 export type SexualPreferenceType = 'bi' | 'hetero' | 'homo';
 
@@ -28,4 +30,14 @@ export interface UserInfoDTO {
   blockedDate: string | null;
   profileImg: number | null;
   age: number;
+}
+
+export interface UserLoginnameAuthInfo extends RowDataPacket {
+  user_id: number;
+  passwd: string;
+}
+
+export interface UserToken {
+  accessToken: string;
+  refreshToken: string;
 }
