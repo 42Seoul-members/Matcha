@@ -1,6 +1,7 @@
 import * as Mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import * as UserModel from '../models/user.models';
+import * as DbModel from '../models/db.models';
 
 const caseConverter = (str: string) =>
   str.replace(/[A-Z]/g, (match) => '_' + match).toUpperCase();
@@ -102,6 +103,7 @@ export const updateUserEmail = async (id: number, email: string) => {
 
 const SELECT_USER_BY_LOGINNAME_SQL = `select user_id, passwd from loginname_list join user_info on loginname_list.user_id=user_info.id where loginname_list.loginname= :loginname`;
 const SELECT_TOKEN_BY_UID_SQL = `select refresh_token from refresh_token_list where user_id= :user_id`;
+const UPDATE_TOKEN_SQL = `UPDATE refresh_token_list SET refresh_token= :token WHERE user_id= :user_id`;
 
 interface temp {
   user_id: number;
@@ -116,10 +118,10 @@ export async function getUserByLoginname(loginname: string) {
       {
         loginname,
       }
-    )) as unknown as UserModel.UserLoginnameAuthInfo[];
+    )) as unknown as UserModel.UserLoginnameAuthInfo[][];
 
     connection.release();
-    return userAuthInfo;
+    return userAuthInfo[0];
   } catch (err) {
     connection.release();
     throw new Error();
@@ -132,10 +134,26 @@ export async function getRefreshToken(userId: number) {
   try {
     const refreshToken = (await connection.execute(SELECT_TOKEN_BY_UID_SQL, {
       user_id: userId,
-    })) as unknown as string[];
+    })) as unknown as DbModel.RefreshTokenQuery[][];
 
     connection.release();
-    return refreshToken;
+    return refreshToken[0];
+  } catch (err) {
+    connection.release();
+    throw new Error();
+  }
+}
+
+export async function updateRefreshToken(userId: number, token: string) {
+  const connection = await getConnection();
+
+  try {
+    await connection.execute(UPDATE_TOKEN_SQL, {
+      user_id: userId,
+      token,
+    });
+
+    connection.release();
   } catch (err) {
     connection.release();
     throw new Error();

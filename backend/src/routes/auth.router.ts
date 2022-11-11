@@ -41,6 +41,6 @@ export const authRouter = express.Router();
  *            $ref: '#/components/schemas/loginInfo'
  */
 authRouter.post('/login', [
-  authController.create,
+  authController.createToken,
   (err: any) => console.log(err),
 ]);

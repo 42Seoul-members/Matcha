@@ -27,7 +27,7 @@ create table refresh_token_list (
     references user_info(id)
     on delete cascade,
   
-  refresh_token varchar(256) not null
+  refresh_token varchar(256) default null
 );
 
 create table loginname_list (
@@ -180,6 +180,9 @@ insert into matcha.email_list (user_id, email) values
 insert into matcha.loginname_list (user_id, loginname) values
   (1, 'jaham'),
   (2, 'yeju');
+
+insert into matcha.refresh_token_list (user_id) values
+  (1);
 
 insert into matcha.img_list (user_id, img_url) values
   (1, 'small_jaham'),
