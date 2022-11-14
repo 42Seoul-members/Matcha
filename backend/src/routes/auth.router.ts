@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
+import passport from 'passport';
 import * as authController from '../controllers/auth.controller';
 
 export const authRouter = express.Router();
@@ -43,4 +44,11 @@ export const authRouter = express.Router();
 authRouter.post('/login', [
   authController.createToken,
   (err: any) => console.log(err),
+]);
+
+authRouter.get('/refreshToken', [
+  passport.authenticate('jwt', { session: false }),
+  (req: Request, res: Response) => {
+    res.send('success');
+  },
 ]);

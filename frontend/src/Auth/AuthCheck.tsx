@@ -31,21 +31,32 @@ export function AuthCheck() {
     console.log('test done');
   };
 
-  const test = async () => {
-    await axiosInstance.post(
+  const getRefreshToken = async () => {
+    const response = await axiosInstance.post(
       `/auth/login`,
       JSON.stringify({
         loginname: 'jaham',
         passwd: '1234',
       })
     );
+
+    localStorage.setItem('refreshToken', response.data);
+  };
+
+  const testRefreshToken = async () => {
+    await axiosInstance.get('/auth/refreshToken', {
+      headers: {
+        Autorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+      },
+    });
   };
 
   return (
     <>
       <button onClick={getToken}>getToken</button>
       <button onClick={testRefresh}>test refresh</button>
-      <button onClick={test}>test</button>
+      <button onClick={getRefreshToken}>getRefreshToken</button>
+      <button onClick={testRefreshToken}>testRefreshToken</button>
     </>
   );
 }

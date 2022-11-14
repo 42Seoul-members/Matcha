@@ -9,7 +9,7 @@ export async function findUser({
   passwd: string;
 }) {
   try {
-    const userAuthInfo = await db.getUserByLoginname(loginname);
+    const userAuthInfo = await db.findUserByLoginname(loginname);
 
     if (userAuthInfo.length === 0 || userAuthInfo[0].passwd !== passwd) {
       return null;
@@ -23,7 +23,7 @@ export async function findUser({
 
 export async function getUserToken(userId: number) {
   try {
-    const refreshToken = await db.getRefreshToken(userId);
+    const refreshToken = await db.findRefreshTokenByUid(userId);
 
     if (refreshToken.length !== 0 && refreshToken[0].refresh_token !== null) {
       return refreshToken[0];

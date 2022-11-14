@@ -6,6 +6,8 @@ import { testRouter } from './routes/test.router';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { authRouter } from './routes/auth.router';
+import passport from 'passport';
+import { jwtStrategyInstance } from './services/passport.service';
 
 class App {
   app: express.Application;
@@ -45,7 +47,7 @@ app.use(
     // origin: [`${process.env.FRONTEND_EP}`],
     origin: ['https://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authoriazation', 'x-csrf-token'],
+    allowedHeaders: ['Content-Type', 'Autorization', 'x-csrf-token'],
     credentials: true,
     maxAge: 600,
     exposedHeaders: ['*', 'Authorization'],
@@ -54,6 +56,9 @@ app.use(
 );
 
 app.use(bodyParser.json());
+app.use(passport.initialize());
+
+passport.use(jwtStrategyInstance);
 
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
@@ -92,8 +97,8 @@ app.post('/logintest', (req: express.Request, res: express.Response) => {
 
 app.post('/refreshtest', (req: express.Request, res: express.Response) => {
   const body = req.body;
-  console.log(body);
-  Object.entries(body).forEach((curr) => console.log(curr[0], curr[1]));
+  // console.log(body);
+  // Object.entries(body).forEach((curr) => console.log(curr[0], curr[1]));
   // console.log(`refresh test token: ${body?.refreshToken}`);
   res.send({
     refreshToken: 'refreshToken',

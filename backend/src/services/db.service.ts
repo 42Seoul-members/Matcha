@@ -110,7 +110,7 @@ interface temp {
   passwd: string;
 }
 
-export async function getUserByLoginname(loginname: string) {
+export async function findUserByLoginname(loginname: string) {
   const connection = await getConnection();
   try {
     const userAuthInfo = (await connection.execute(
@@ -128,7 +128,7 @@ export async function getUserByLoginname(loginname: string) {
   }
 }
 
-export async function getRefreshToken(userId: number) {
+export async function findRefreshTokenByUid(userId: number) {
   const connection = await getConnection();
 
   try {
